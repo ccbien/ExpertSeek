@@ -46,15 +46,59 @@ def perform_healthcheck() -> None:
     return JSONResponse(content={"message": "success"})
 
 
-@app.get("/fetch")
-def fetch(query: str):
+@app.get("/get/paper")
+def get_paper(paper_id: str):
     try:
-        rows = db.execute(query)
+        paper = db.get_paper(paper_id)
     except Exception:
         traceback.print_exc()
         return JSONResponse(content={"message": "SQL Database error"})
 
-    return JSONResponse(content={"message": "success", "rows": rows})
+    return JSONResponse(content={"message": "success", "paper": paper})
+
+
+@app.get("/get/author")
+def get_author(author_id: str):
+    try:
+        author = db.get_author(author_id)
+    except Exception:
+        traceback.print_exc()
+        return JSONResponse(content={"message": "SQL Database error"})
+
+    return JSONResponse(content={"message": "success", "author": author})
+
+
+@app.get("/get/top-coauthor")
+def get_top_coauthors(author_id: str, limit: int):
+    try:
+        authors = db.get_top_coauthors(author_id, limit)
+    except Exception:
+        traceback.print_exc()
+        return JSONResponse(content={"message": "SQL Database error"})
+
+    return JSONResponse(content={"message": "success", "authors": authors})
+
+
+@app.get("/get/num-citations")
+def get_num_citations(author_id: str):
+    try:
+        n_citation = db.get_num_citations(author_id)
+    except Exception:
+        traceback.print_exc()
+        return JSONResponse(content={"message": "SQL Database error"})
+
+    return JSONResponse(content={"message": "success", "n_citation": n_citation})
+
+
+@app.get("/search/authors")
+def search_authors(name: str, org: str, limit: int):
+    try:
+        authors = db.search_authors(name, org, limit)
+    except Exception:
+        traceback.print_exc()
+        return JSONResponse(content={"message": "SQL Database error"})
+
+    return JSONResponse(content={"message": "success", "authors": authors})
 
 
 if __name__ == '__main__':
