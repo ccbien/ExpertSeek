@@ -25,7 +25,7 @@ class Database:
     @staticmethod
     def create_database(db_path):
         conn = sqlite3.connect(db_path)
-        cursor = self.conn.cursor()
+        cursor = conn.cursor()
         
         cursor.execute("""
             CREATE TABLE papers (
