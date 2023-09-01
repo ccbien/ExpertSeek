@@ -71,6 +71,18 @@ class Database:
         return data[0][1]
     
     
+    def get_all_papers(self, author_id):
+        """Get author by id"""
+        query = f"""
+            SELECT paper_id FROM paper_author
+            WHERE author_id = '{author_id}'
+        """
+        attrs = ["paper_id"]
+        data = [{attr: value for attr, value in zip(attrs, row)}
+                    for row in self.execute(query)]
+        return data
+    
+    
     def search_authors(self, name, org, limit):
         """Search authors by name and organization, sort the result by the number of citations"""
         query = f"""

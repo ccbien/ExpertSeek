@@ -90,6 +90,18 @@ def get_num_citations(author_id: str):
     return JSONResponse(content={"message": "success", "n_citation": n_citation})
 
 
+@app.get("/get/all-papers")
+def get_all_papers(author_id: str):
+    try:
+        papers = db.get_all_papers(author_id)
+    except Exception:
+        traceback.print_exc()
+        return JSONResponse(content={"message": "SQL Database error"})
+
+    return JSONResponse(content={"message": "success", "papers": papers})
+
+
+
 @app.get("/search/authors")
 def search_authors(name: str, org: str, limit: int):
     try:
