@@ -62,7 +62,7 @@ def search_paper(vector: List[int], limit: int=10):
 
 
 @app.get("/search/author")
-def search_paper(vector: List[int], limit: int=10):
+def search_author(vector: List[int], limit: int=10):
     try:
         data = zilliz_client.search("author", vector, limit)
     except Exception:

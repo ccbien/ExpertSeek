@@ -50,7 +50,7 @@ def perform_healthcheck() -> None:
 
 
 @app.get("/encode")
-def fetch(text: str):
+def encode(text: str):
     try:
         embedding = clip_encoder.encode(text)
     except Exception:
