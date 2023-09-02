@@ -3,6 +3,7 @@ import traceback
 from typing import List
 
 import uvicorn
+from pydantic import BaseModel
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,6 +11,11 @@ from fastapi.responses import JSONResponse, RedirectResponse
 
 from core import ZillizClient
 from config import settings
+
+class SearchRequest(BaseModel):
+    vector: List[float]
+    limit: int = 10
+    
 
 zilliz_client = None
 app = FastAPI(title="Vector Database service")
@@ -50,10 +56,10 @@ def perform_healthcheck() -> None:
     return JSONResponse(content={"message": "success"})
 
 
-@app.get("/search/paper")
-def search_paper(vector: List[int], limit: int=10):
+@app.post("/search/paper")
+async def search_paper(search_request: SearchRequest):
     try:
-        data = zilliz_client.search("papers", vector, limit)
+        data = zilliz_client.search("papers", search_request.vector, search_request.limit)
     except Exception:
         traceback.print_exc()
         return JSONResponse(content={"message": "Vector Database error"})
@@ -61,10 +67,10 @@ def search_paper(vector: List[int], limit: int=10):
     return JSONResponse(content={"message": "success", "data": data})
 
 
-@app.get("/search/author")
-def search_author(vector: List[int], limit: int=10):
+@app.post("/search/author")
+async def search_author(search_request: SearchRequest):
     try:
-        data = zilliz_client.search("author", vector, limit)
+        data = zilliz_client.search("authors", search_request.vector, search_request.limit)
     except Exception:
         traceback.print_exc()
         return JSONResponse(content={"message": "Vector Database error"})
