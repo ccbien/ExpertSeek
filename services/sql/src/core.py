@@ -101,6 +101,18 @@ class Database:
         return data
     
     
+    def get_first_author(self, paper_id):
+        query = f"""
+            SELECT author_id FROM paper_author
+            WHERE paper_id = '{paper_id}'
+            LIMIT 1
+        """
+        attrs = ["author_id"]
+        data = [{attr: value for attr, value in zip(attrs, row)}
+                    for row in self.execute(query)]
+        return data[0]["author_id"]
+    
+    
     def execute(self, query, data=()):
         self.cursor.execute(query, data)
         self.conn.commit()

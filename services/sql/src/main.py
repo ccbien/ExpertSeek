@@ -101,7 +101,6 @@ def get_all_papers(author_id: str):
     return JSONResponse(content={"message": "success", "papers": papers})
 
 
-
 @app.get("/search/authors")
 def search_authors(name: str, org: str, limit: int):
     try:
@@ -111,6 +110,17 @@ def search_authors(name: str, org: str, limit: int):
         return JSONResponse(content={"message": "SQL Database error"})
 
     return JSONResponse(content={"message": "success", "authors": authors})
+
+
+@app.get("/get/first-author")
+def get_first_author(paper_id: str):
+    try:
+        author_id = db.get_first_author(paper_id)
+    except Exception:
+        traceback.print_exc()
+        return JSONResponse(content={"message": "SQL Database error"})
+
+    return JSONResponse(content={"message": "success", "author_id": author_id})
 
 
 if __name__ == '__main__':
